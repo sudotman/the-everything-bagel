@@ -16,7 +16,7 @@ from typing import Any
 
 import requests, random
 
-
+import pandas as pd
 import numpy as np
 
 import json
@@ -24,15 +24,15 @@ import json
 import streamlit as st
 
 st.set_page_config(page_title="Art", page_icon="📹")
-st.markdown("# art corner")
+st.markdown("# world's data")
 st.sidebar.header("what do you want to see?")
 
-seeFullInformation = st.sidebar.checkbox("See raw information alongside art piece?")
-sideBarSelectBox = st.sidebar.selectbox('select art collection', ['Select One','MET','Art Insitute of Chicago','Duck','Test'])
+seeFullInformation = st.sidebar.checkbox("see raw information alongside the data?")
+sideBarSelectBox = st.sidebar.selectbox('select data to be fetched', ['Select One','Indian Postal Codes','Art Insitute of Chicago','Duck','Test'])
 
 if sideBarSelectBox=='Select One':
     st.write(
-        """This page consists of art collections from prominent museums - select one to get a random art piece and all relevant information."""
+        """This page consists various datasets pertaining to the world (and in some cases, India)."""
     )
 
 
@@ -42,36 +42,23 @@ if sideBarSelectBox!='Select One':
     beingUsed = True
     st.write("Random art piece from " + sideBarSelectBox + ": ")
 
-if sideBarSelectBox == 'MET':  
+if sideBarSelectBox == 'Indian Postal Codes':  
     st.sidebar.write("The met has over 485710 artworks publicly available - hope you have fun viewing one on random!")
 
+    pincode = st.number_input('Enter the pin code to lookup: ',8000,1000000,8000,1)
 
-    x = requests.get('https://collectionapi.metmuseum.org/public/collection/v1/objects/'+str(random.randrange(0, 485710)))
-    y = x.json()
+    if pincode>9000: 
+        x = requests.get('https://api.postalpincode.in/pincode/'+str(pincode))
+        y = x.json()
 
-    st.write('Title: ' + y["title"])
-    st.write('Type: ' + y["objectName"])
+        st.write(y[0]["Message"])
 
-    st.write('Artist: ' + y["artistDisplayName"])
+        st.write(pd.DataFrame(y[0]["PostOffice"]))
 
-    if y["culture"]!="":
-        st.write('Culture: ' + y["culture"])
+        # st.write('Title: ' + y["title"])
 
-    if y["country"]!="":
-        st.write('Country Found In: ' + y["country"])
-
-    if y["department"]!="":    
-        st.write('Department: ' + y["department"])
-
-    st.write('Artwork Aquired On: ' + y["accessionYear"])
-
-    if y["primaryImage"]!="":
-        st.image(y["primaryImage"]) 
-    else:
-        st.write("This art piece doesn't have any image associated with it.") 
-
-    if seeFullInformation:
-        st.write(y)
+        if seeFullInformation:
+            st.write(y)
 
 elif sideBarSelectBox == 'Art Insitute of Chicago':  
     st.sidebar.write("Art Insitute of Chicago has over 123,000 artworks publicly available - hope you have fun viewing one on random!")
