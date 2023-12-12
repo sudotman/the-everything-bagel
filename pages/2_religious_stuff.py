@@ -28,7 +28,7 @@ st.markdown("# various religions's scriptures")
 st.sidebar.header("what do you want to see?")
 
 seeFullInformation = st.sidebar.checkbox("see raw information alongside the data? [debugging]")
-sideBarSelectBox = st.sidebar.selectbox('select text to be fetched', ['Select One','Bible','Bhagavad Gita','Duck','Test'])
+sideBarSelectBox = st.sidebar.selectbox('select text to be fetched', ['Select One','Bible','Bhagavad Gita','Quran'])
 
 if sideBarSelectBox=='Select One':
     st.write(
@@ -91,6 +91,30 @@ elif sideBarSelectBox == 'Bhagavad Gita':
     elif languagePreference=="English":
         st.write("Translation by: "+y["siva"]["author"])
         st.write(y["siva"]["et"])
+
+    if seeFullInformation:
+        st.write(y)
+elif sideBarSelectBox == 'Quran':  
+    
+    st.info("You can search for ayah inside Quran, press enter after you're done writing. You can enter the ayah number. For example:\n\n 262 will get you Ayat Al Kursi.\n\nLeave it blank for a random verse.")
+    verse = st.text_input('Enter the Quran ayah to look up: ',"")
+
+    st.sidebar.write("You can search for any of the 6236 verses.")
+
+    x = None
+
+    if verse=="":
+        x = requests.get('http://api.alquran.cloud/v1/ayah/'+ str(random.randrange(1,5000)) + '/en.asad')
+    else:
+        x = requests.get('http://api.alquran.cloud/v1/ayah/'+ str(verse) + '/en.asad')
+    
+    y = x.json()
+
+    st.write(y["data"]["number"])
+    st.write("Surah Name: " + str(y["data"]["surah"]["name"]) + "  
+    Transliteration: " + str(y["data"]["surah"]["englishName"]))
+
+    st.write(y["data"]["text"])
 
     if seeFullInformation:
         st.write(y)
