@@ -43,7 +43,7 @@ if sideBarSelectBox!='Select One':
     st.write("Random art piece from " + sideBarSelectBox + ": ")
 
 if sideBarSelectBox == 'Indian Postal Codes':  
-    st.sidebar.write("The met has over 485710 artworks publicly available - hope you have fun viewing one on random!")
+    st.sidebar.write("Indian Pin codes and their corresponding information can be fetched for all the states!")
 
     pincode = st.number_input('Enter the pin code to lookup: ',8000,1000000,8000,1)
 
@@ -97,5 +97,5 @@ elif sideBarSelectBox == "Test":
 if beingUsed:
     st.button("Re-run")
 
-st.sidebar.info("Reload the page if an error appears. Note: Sometimes images don't appear simlpy because the art piece doesn't have an image in their museum catalog.")
+st.sidebar.info("Reload the page if an error appears.")
 
