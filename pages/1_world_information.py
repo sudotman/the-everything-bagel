@@ -27,12 +27,12 @@ st.set_page_config(page_title="Art", page_icon="📹")
 st.markdown("# world's data")
 st.sidebar.header("what do you want to see?")
 
-seeFullInformation = st.sidebar.checkbox("see raw information alongside the data?")
-sideBarSelectBox = st.sidebar.selectbox('select data to be fetched', ['Select One','Indian Postal Codes','Art Insitute of Chicago','Duck','Test'])
+seeFullInformation = st.sidebar.checkbox("see raw data? [debugging]")
+sideBarSelectBox = st.sidebar.selectbox('select data to be fetched', ['Select One','Search any IP/e-mail/DNS','World Registered Domains','World Forex Rates','Indian Postal Codes','Test'])
 
 if sideBarSelectBox=='Select One':
     st.write(
-        """This page consists various datasets pertaining to the world (and in some cases, India)."""
+        """This page consists various data fetching capabilities pertaining to the world (and in a few cases, India)."""
     )
 
 
@@ -40,12 +40,12 @@ beingUsed = False
 
 if sideBarSelectBox!='Select One':
     beingUsed = True
-    st.write("Random art piece from " + sideBarSelectBox + ": ")
+    st.write("Currently on: " + sideBarSelectBox + "")
 
 if sideBarSelectBox == 'Indian Postal Codes':  
     st.sidebar.write("Indian Pin codes and their corresponding information can be fetched for all the states!")
 
-    pincode = st.number_input('Enter the pin code to lookup: ',8000,1000000,8000,1)
+    pincode = st.number_input('Enter the pin code to lookup: ',8000,1000000,400001,1)
 
     if pincode>9000: 
         x = requests.get('https://api.postalpincode.in/pincode/'+str(pincode))
@@ -60,39 +60,128 @@ if sideBarSelectBox == 'Indian Postal Codes':
         if seeFullInformation:
             st.write(y)
 
-elif sideBarSelectBox == 'Art Insitute of Chicago':  
-    st.sidebar.write("Art Insitute of Chicago has over 123,000 artworks publicly available - hope you have fun viewing one on random!")
+elif sideBarSelectBox == 'World Registered Domains':  
+    st.sidebar.write("Search up for any registered domain on the world wide web to get their corresponding information.")
 
-    x = requests.get('https://api.artic.edu/api/v1/artworks/'+str(random.randrange(0, 123000)))
+    domain = st.text_input("Enter the domain name here (e.g. facebook)")
+
+    if domain!="":
+        x = requests.get('https://api.domainsdb.info/v1/domains/search?domain='+domain)
+        y = x.json()
+
+        st.write('Total registered domains with this keyword: ' + str(y["total"]))
+        st.write('Time taken to fetch these (ms): ' + str(y["time"]))
+
+        st.write(pd.DataFrame(y["domains"]))
+
+        # st.write('Title: ' + y["title"])
+
+        if seeFullInformation:
+            st.write(y)
+
+elif sideBarSelectBox == 'World Forex Rates':  
+    st.sidebar.write("See the latest forex exchange rates (base - EUR) [updated 16:00 CET every working day].")
+
+    x = requests.get('https://api.frankfurter.app/latest')
     y = x.json()
 
-    st.write('Title: ' + y["data"]["title"])
-    st.write('Type: ' + y["data"]["medium_display"])
+    st.write('Base Currency: ' + str(y["base"]))
+    st.write('Last Updated: ' + str(y["date"]))
 
-    st.write('Artist: ' + y["data"]["artist_display"])
+    data = y["rates"]
+    dataFrame = pd.Series(data).to_frame('Rate')
+    st.write(dataFrame)
 
-
-    if y["data"]["place_of_origin"]!="":
-        st.write('Country Found In: ' + y["data"]["place_of_origin"])
-
-    if y["data"]["description"]!="" and y["data"]["description"]!= None:    
-        st.write('Description: ' + y["data"]["description"])
-
-    st.write('Artwork Aquired On: ' + y["data"]["date_display"])   
-
-    if y["config"]["iiif_url"]!="":
-        st.image(y["config"]["iiif_url"]+'/'+y["data"]["image_id"]+'/full/843,/0/default.jpg') 
-    else:
-        st.write("This art piece doesn't have any image associated with it.") 
+    # st.write('Title: ' + y["title"])
 
     if seeFullInformation:
         st.write(y)
 
-elif sideBarSelectBox == "Test":
-    x = requests.get('https://collectionapi.metmuseum.org/public/collection/v1/objects')
-    y = x.json()
+elif sideBarSelectBox == "Search any IP/e-mail/DNS":
+    st.sidebar.write("Search up for any IP address to get data associated with it - including city, region, and rough lat/longs.")
 
-    st.write(y)
+    ipType = st.radio("What information do you want to fetch?",[":rainbow[IP Address]", "Email ID", "Domain DNS","Who Is Domain"],captions = ["Search for any IP address e.g. 1.1.1.1.", "Search for an email id address e.g. example@gmail.com.", "Get DNS records for a domain. e.g. google.com.","Get who is data of a domain e.g. google.com"])
+
+    domain = st.text_input("Enter the " + ipType +" here.")
+
+    if domain!="":
+
+        currentSwitch = "ip"
+
+        if ipType == ":rainbow[IP Address]":
+            currentSwitch = "ip"
+        elif ipType == "Email ID":
+            currentSwitch = "email"
+        elif ipType == "Domain DNS":
+            currentSwitch = "dns"
+        elif ipType == "Who Is Domain":
+            currentSwitch = "whois"
+            
+        x = requests.get('https://scraper.run/'+ currentSwitch +'?addr='+domain)
+        y = x.json()
+
+        st.write('Address: ' + domain)
+
+        if ipType == "Domain DNS":
+            data = y
+
+            st.caption("IPs associated with the address: ")
+
+            for item in y["ip"]:
+                st.write(item)
+
+            st.caption("txt/certificates: ")
+            for item in y["txt"]:
+                st.write(item)
+
+            st.caption("mx (mail server): ")
+            for item in y["mx"]:
+                st.write(item)
+
+            st.caption("domain: ")
+
+            st.write(y["domain"])
+            
+            # st.write(pd.DataFrame(y))
+        elif ipType == "Who Is Domain":
+            data = y["domain"]
+            st.write(y)
+
+            data['status'] = ','.join(data['status'])
+            
+            data['name_servers'] = ','.join(data['name_servers'])
+
+            st.caption("domain Information: ")
+            dataFrame = pd.Series(data).to_frame('values')
+            st.write(dataFrame)
+
+
+            st.caption("registrar Information: ")
+
+            data = y["registrar"]
+            dataFrame2 = pd.Series(data).to_frame('values')
+            st.write(dataFrame2)
+
+
+            st.caption("registrant Information: ")
+            st.write(pd.DataFrame(y["registrant"]))
+
+            st.caption("administrative Information: ")
+            st.write(pd.DataFrame(y["administrative"]))
+
+            st.caption("technical Information: ")
+            st.write(pd.DataFrame(y["technical"]))
+
+
+        else:
+            data = y
+            dataFrame = pd.Series(data).to_frame('values')
+
+            st.write(dataFrame)
+
+
+        if seeFullInformation:
+            st.write(y)
 
 if beingUsed:
     st.button("Re-run")

@@ -27,7 +27,7 @@ st.set_page_config(page_title="Religion", page_icon="📹")
 st.markdown("# various religions's scriptures")
 st.sidebar.header("what do you want to see?")
 
-seeFullInformation = st.sidebar.checkbox("see raw information alongside the data? [debugging]")
+seeFullInformation = st.sidebar.checkbox("see raw data? [debugging]")
 sideBarSelectBox = st.sidebar.selectbox('select text to be fetched', ['Select One','Bible','Bhagavad Gita','Quran'])
 
 if sideBarSelectBox=='Select One':
@@ -111,8 +111,7 @@ elif sideBarSelectBox == 'Quran':
     y = x.json()
 
     st.write(y["data"]["number"])
-    st.write("Surah Name: " + str(y["data"]["surah"]["name"]) + "  
-    Transliteration: " + str(y["data"]["surah"]["englishName"]))
+    st.write("Surah Name: " + str(y["data"]["surah"]["name"]) + "  Transliteration: " + str(y["data"]["surah"]["englishName"]))
 
     st.write(y["data"]["text"])
 

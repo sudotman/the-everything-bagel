@@ -29,8 +29,8 @@ st.set_page_config(page_title="Art", page_icon="📹")
 st.markdown("# art corner")
 st.sidebar.header("what do you want to see?")
 
-seeFullInformation = st.sidebar.checkbox("See raw information alongside art piece?")
-sideBarSelectBox = st.sidebar.selectbox('select art collection', ['Select One','MET','Art Insitute of Chicago','Duck','Test'])
+seeFullInformation = st.sidebar.checkbox("see raw data? [debugging]")
+sideBarSelectBox = st.sidebar.selectbox('select art collection', ['Select One','MET','Art Insitute of Chicago'])
 
 if sideBarSelectBox=='Select One':
     st.write(
