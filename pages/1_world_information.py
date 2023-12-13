@@ -145,7 +145,6 @@ elif sideBarSelectBox == "Search any IP/e-mail/DNS":
             # st.write(pd.DataFrame(y))
         elif ipType == "Who Is Domain":
             data = y["domain"]
-            st.write(y)
 
             data['status'] = ','.join(data['status'])
             
@@ -159,18 +158,27 @@ elif sideBarSelectBox == "Search any IP/e-mail/DNS":
             st.caption("registrar Information: ")
 
             data = y["registrar"]
-            dataFrame2 = pd.Series(data).to_frame('values')
-            st.write(dataFrame2)
+            dataFrame = pd.Series(data).to_frame('values')
+            st.write(dataFrame)
 
 
             st.caption("registrant Information: ")
-            st.write(pd.DataFrame(y["registrant"]))
+            data = y["registrant"]
+            dataFrame = pd.Series(data).to_frame('values')
+            st.write(dataFrame)
+        
 
             st.caption("administrative Information: ")
-            st.write(pd.DataFrame(y["administrative"]))
+
+            data = y["administrative"]
+            dataFrame = pd.Series(data).to_frame('values')
+            st.write(dataFrame)
+        
 
             st.caption("technical Information: ")
-            st.write(pd.DataFrame(y["technical"]))
+            data = y["technical"]
+            dataFrame = pd.Series(data).to_frame('values')
+            st.write(dataFrame)
 
 
         else:
