@@ -23,12 +23,12 @@ import json
 
 import streamlit as st
 
-st.set_page_config(page_title="Art", page_icon="📹")
+st.set_page_config(page_title="world information", page_icon="📹")
 st.markdown("# world's data")
 st.sidebar.header("what do you want to see?")
 
 seeFullInformation = st.sidebar.checkbox("see raw data? [debugging]")
-sideBarSelectBox = st.sidebar.selectbox('select data to be fetched', ['Select One','Search any IP/e-mail/DNS','World Registered Domains','World Forex Rates','Indian Postal Codes','Test'])
+sideBarSelectBox = st.sidebar.selectbox('select data to be fetched', ['Select One','Search any IP/e-mail/DNS','World Registered Domains','World Forex Rates','Indian Postal Codes'])
 
 if sideBarSelectBox=='Select One':
     st.write(

@@ -15,6 +15,9 @@
 import streamlit as st
 from streamlit.logger import get_logger
 
+import numpy as np
+from typing import Any
+
 LOGGER = get_logger(__name__)
 
 
@@ -31,13 +34,17 @@ def run():
     st.markdown(
         """
         This a fun little application made to do a bunch of stuff that might be helpful. Inspired by Everything Everywhere All At Once.
-        **Start interacting from the sidebar.** 
+        **Start interacting from the sidebar.** Reloading should help if in case any error happens.
 
         Project created with the help of [[streamlit.io]](https://streamlit.io), public APIs and other open source techonologies.
         #### About me
         Hi, I am Satyam [[website]](https://sudotman.github.io) [[mail]](mailto:satyamsudo@gmail.com)
     """
     )
+
+
+
+
 
 
 if __name__ == "__main__":
