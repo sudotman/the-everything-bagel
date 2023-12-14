@@ -24,7 +24,7 @@ LOGGER = get_logger(__name__)
 def run():
     st.set_page_config(
         page_title="Introduction",
-        page_icon="👋",
+        page_icon="🥯",
     )
 
     st.write("# This is the everything bagel.")
