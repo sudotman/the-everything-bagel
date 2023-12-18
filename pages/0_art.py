@@ -51,29 +51,32 @@ if sideBarSelectBox == 'MET':
     x = requests.get('https://collectionapi.metmuseum.org/public/collection/v1/objects/'+str(random.randrange(0, 485710)))
     y = x.json()
 
-    st.write('Title: ' + y["title"])
-    st.write('Type: ' + y["objectName"])
+    if "title" in y:
+        st.write('Title: ' + y["title"])
+        st.write('Type: ' + y["objectName"])
 
-    st.write('Artist: ' + y["artistDisplayName"])
+        st.write('Artist: ' + y["artistDisplayName"])
 
-    if y["culture"]!="":
-        st.write('Culture: ' + y["culture"])
+        if y["culture"]!="":
+            st.write('Culture: ' + y["culture"])
 
-    if y["country"]!="":
-        st.write('Country Found In: ' + y["country"])
+        if y["country"]!="":
+            st.write('Country Found In: ' + y["country"])
 
-    if y["department"]!="":    
-        st.write('Department: ' + y["department"])
+        if y["department"]!="":    
+            st.write('Department: ' + y["department"])
 
-    st.write('Artwork Aquired On: ' + y["accessionYear"])
+        st.write('Artwork Aquired On: ' + y["accessionYear"])
 
-    if y["primaryImage"]!="":
-        st.image(y["primaryImage"]) 
+        if y["primaryImage"]!="":
+            st.image(y["primaryImage"]) 
+        else:
+            st.write("This art piece doesn't have any image associated with it.") 
+
+        if seeFullInformation:
+            st.write(y)
     else:
-        st.write("This art piece doesn't have any image associated with it.") 
-
-    if seeFullInformation:
-        st.write(y)
+        st.write("Fetching the art piece ran into some error. It's possible the online library has broken endpoint or a falsely cached link. Just reload.")
 
 elif sideBarSelectBox == 'Art Insitute of Chicago':  
     st.sidebar.write("Art Insitute of Chicago has over 123,000 artworks publicly available - hope you have fun viewing one on random!")
@@ -81,27 +84,33 @@ elif sideBarSelectBox == 'Art Insitute of Chicago':
     x = requests.get('https://api.artic.edu/api/v1/artworks/'+str(random.randrange(0, 123000)))
     y = x.json()
 
-    st.write('Title: ' + y["data"]["title"])
-    st.write('Type: ' + y["data"]["medium_display"])
+    if "data" in y:
+        st.write('Title: ' + y["data"]["title"])
+        st.write('Type: ' + y["data"]["medium_display"])
 
-    st.write('Artist: ' + y["data"]["artist_display"])
+        st.write('Artist: ' + y["data"]["artist_display"])
 
 
-    if y["data"]["place_of_origin"]!="":
-        st.write('Country Found In: ' + y["data"]["place_of_origin"])
+        if y["data"]["place_of_origin"]!="":
+            st.write('Country Found In: ' + y["data"]["place_of_origin"])
 
-    if y["data"]["description"]!="" and y["data"]["description"]!= None:    
-        st.write('Description: ' + y["data"]["description"])
+        if y["data"]["description"]!="" and y["data"]["description"]!= None:    
+            st.write('Description: ' + y["data"]["description"])
 
-    st.write('Artwork Aquired On: ' + y["data"]["date_display"])   
+        st.write('Artwork Aquired On: ' + y["data"]["date_display"])   
 
-    if y["config"]["iiif_url"]!="":
-        st.image(y["config"]["iiif_url"]+'/'+y["data"]["image_id"]+'/full/843,/0/default.jpg') 
+        if y["config"]["iiif_url"]!="":
+            st.image(y["config"]["iiif_url"]+'/'+y["data"]["image_id"]+'/full/843,/0/default.jpg') 
+        else:
+            st.write("This art piece doesn't have any image associated with it.") 
+
+        if seeFullInformation:
+            st.write(y)
     else:
-        st.write("This art piece doesn't have any image associated with it.") 
+        st.write("Fetching the art piece ran into some error. It's possible the online library has broken endpoint or a falsely cached link. Just reload.")
 
-    if seeFullInformation:
-        st.write(y)
+
+ 
 
 elif sideBarSelectBox == "Test":
     x = requests.get('https://collectionapi.metmuseum.org/public/collection/v1/objects')
