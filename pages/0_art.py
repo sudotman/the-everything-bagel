@@ -39,6 +39,7 @@ if sideBarSelectBox=='Select One':
 
 
 beingUsed = False
+fetchingError = "Fetching the art piece ran into some error. It's possible the online library has a broken endpoint, a falsely cached link or the randomly indexed artwork isn't available anymore. Just reload."
 
 if sideBarSelectBox!='Select One':
     beingUsed = True
@@ -51,7 +52,10 @@ if sideBarSelectBox == 'MET':
     x = requests.get('https://collectionapi.metmuseum.org/public/collection/v1/objects/'+str(random.randrange(0, 485710)))
     y = x.json()
 
-    if "title" in y:
+
+    if "message" in y:
+        st.write(fetchingError)
+    else:
         st.write('Title: ' + y["title"])
         st.write('Type: ' + y["objectName"])
 
@@ -75,8 +79,6 @@ if sideBarSelectBox == 'MET':
 
         if seeFullInformation:
             st.write(y)
-    else:
-        st.write("Fetching the art piece ran into some error. It's possible the online library has broken endpoint or a falsely cached link. Just reload.")
 
 elif sideBarSelectBox == 'Art Insitute of Chicago':  
     st.sidebar.write("Art Insitute of Chicago has over 123,000 artworks publicly available - hope you have fun viewing one on random!")
@@ -84,7 +86,9 @@ elif sideBarSelectBox == 'Art Insitute of Chicago':
     x = requests.get('https://api.artic.edu/api/v1/artworks/'+str(random.randrange(0, 123000)))
     y = x.json()
 
-    if "data" in y:
+    if "error" in y:
+        st.write(fetchingError)
+    else:
         st.write('Title: ' + y["data"]["title"])
         st.write('Type: ' + y["data"]["medium_display"])
 
@@ -106,9 +110,6 @@ elif sideBarSelectBox == 'Art Insitute of Chicago':
 
         if seeFullInformation:
             st.write(y)
-    else:
-        st.write("Fetching the art piece ran into some error. It's possible the online library has broken endpoint or a falsely cached link. Just reload.")
-
 
  
 
